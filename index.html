@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After School Lessons</title>
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+    <script src="subjects.js"></script>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-custom">
+                <div class="container">
+                    <a class="navbar-brand" href="">
+                        <h3 v-text="sitename"></h3>
+                    </a>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <button v-if="cartItemCount > 0" @click="showCart">
+                                    {{ cartItemCount }}
+                                    <i class="fa-solid fa-cart-shopping"></i> Cart
+                                </button>
+                                <button disabled="disabled" v-else>
+                                    <i class="fa-solid fa-cart-shopping"></i> Cart
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                <div v-if="showsubject">
+                    <br>
+                    <div id="sort-bar">
+                        <select name="sortBy" id="select" v-model="sortBy">
+                            <option value="subject">Subject</option>
+                            <option value="location">Location</option>
+                            <option value="price">Price</option>
+                            <option value="availability">Availability</option>
+                        </select>
+                        <button v-on:click="ascending = !ascending" class="sort-button">
+                            <i v-if="ascending" class="fa fa-sort-up"></i>
+                            <i v-else class="fa fa-sort-down"></i>
+                        </button>
+                        <input type="text" v-model="searchValue" placeholder="Search.." id="search-input"></input>
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <div class="container-fluid  my-4 p-3" style="position: relative;">
+                        <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
+                            <div class="col" v-for="subject in sortedSubjects" :key="subject">
+                                <div class="card h-100 shadow-sm">
+                                    <figure>
+                                        <img class="card-img" v-bind:src="subject.image" width="200" height="200">
+                                    </figure>
+                                    <div class="card-body">
+                                        <h3 v-text="subject.title"></h3>
+                                        <ul>
+                                            <li><strong>Location: </strong> {{ subject.location }}</li>
+                                            <li><strong>Timings: </strong> {{ subject.timings }}</li>
+                                            <li><strong>Price: </strong>AED {{subject.price}}</li>
+                                            <li><strong>Spaces: </strong>{{ subject.availableSpace -
+                                                cartCount(subject)}}</li>
+                                        </ul>
+                                        <button class="btn btn-primary" v-on:click="addToCart(subject)"
+                                            v-if="canAddToCart(subject) && subject.availableSpace > 0">Add to
+                                            cart</button>
+                                        <button disabled="disabled" v-else>Add to cart</button>
+                                        <div class="rating">
+                                            <span v-for="n in subject.rating">★</span>
+                                            <span v-for="n in 5- subject.rating">☆</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-else>
+                    <h2>Checkout</h2>
+                    <div v-if="cartItemCount > 0">
+                        <div>
+                            <p><strong>First Name:</strong><br><input v-model.trim="order.firstName" type="text"
+                                    v-model="text" /></p>
+                            <p><strong>Last Name:</strong><br><input v-model="order.lastName" /></p>
+                            <p><strong>Address: </strong><br><input v-model="order.address" /></p>
+                            <p><strong>Phone Number: </strong><br><input v-model="order.phoneNumber" type="number" />
+                            </p>
+
+                            <button v-on:click="saveOrder">Checkout</button>
+                        </div>
+                        <div class="container-fluid  my-4 p-3" style="position: relative;">
+                            <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
+
+                                <div class="col" v-for="(item, i) in cart" :key="i">
+                                    <div class="card h-100 shadow-sm">
+                                        <figure>
+                                            <img class="card-img" v-bind:src="item.image" width="200" height="200">
+                                        </figure>
+                                        <div class="card-body">
+                                            <h2>{{ item.title }}</h2>
+                                            <ul>
+                                                <li><strong>Location: </strong> {{ item.location }}</li>
+                                                <li><strong>Timings: </strong> {{ item.timings }}</li>
+                                                <li><strong>Price: </strong>AED {{item.price}}</li>
+                                            </ul>
+                                            <button class="btn btn-danger" @click="removeFromCart(i)">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div v-else>
+                        <p style="height: 100vh;">Your Cart is Empty</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="text/javascript">
+        var webstore = new Vue({
+            el: '#app',
+            data: {
+                sortBy: 'subject',
+                searchValue: '',
+                ascending: true,
+                showsubject: true,
+                order: {
+                    firstName: '',
+                    lastName: '',
+                    address: '',
+                    phoneNumber: '',
+                    lessonID: '',
+                },
+                sitename: 'After School Classes',
+                subjects: [],
+                cart: []
+            },
+            created:
+                function () {
+                    console.log('requesting data from server ...')
+
+                    fetch('http://localhost:3000/collection/lessons').then(
+                        function (response) {
+                            response.json().then(
+                                function (json) {
+                                    // save the returned JSON object to
+                                    // 'product' data property
+                                    webstore.subjects = json;
+                                    console.log(json);
+                                });
+                        }
+                    )
+                },
+            methods: {
+                // add to cart button
+                addToCart(subject) {
+                    this.cart.push(subject);
+                },// checkout/lesson toggle
+                showCart() {
+                    this.showsubject = !this.showsubject;
+                },// checkout button validation and alert
+                saveOrder() {
+                    if (this.order.firstName &&
+                        this.order.lastName &&
+                        this.order.phoneNumber &&
+                        this.order.address) {
+                        const newProduct = { firstName: this.order.firstName, lastName: this.order.lastName, phoneNumber: this.order.phoneNumber, lessonID: this.cart.id(subject), space: this.cart.length };
+                        fetch('http://localhost:3000/collection/orders', {
+                            method: 'POST', // set the HTTP method as 'POST'
+                            headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                            },
+                            body: JSON.stringify(newProduct), // need to stringify the JSON object
+                        })
+                            .then(response => response.json())
+                            .then(responseJSON => {
+                                document.getElementById('response').innerText = JSON.stringify(responseJSON);
+                            })
+                            .catch((error) => {
+                                document.getElementById('error').innerText = error;
+                            });
+                        alert('Order has been submitted!')
+                        order.firstName = "";
+                        order.lastName = "";
+
+                    } else {
+                        alert('Missing fields')
+                    }
+
+                },//if condition for ATC button
+                canAddToCart(subject) {
+                    return subject.availableSpace > this.cartCount(subject);
+                },// cart length count
+                cartCount(id) {
+                    let count = 0;
+                    for (let i = 0; i < this.cart.length; i++) {
+                        if (this.cart[i] === id) {
+                            count++;
+                        }
+                    }
+                    return count;
+                },// remove subject from cart
+                removeFromCart(index) {
+                    this.cart.splice(index, 1);
+                    if (this.cart.length === 0) {
+                        this.showsubject = true;
+                    }
+                }
+                
+            },
+            computed: {
+                cartItemCount: function () {
+                    return this.cart.length;
+                },
+                sortedSubjects() {
+                    let subjectsArray = this.subjects;
+
+                    //search filter 
+                    if (this.searchValue != '' && this.searchValue) {
+                        subjectsArray = subjectsArray.filter((subject) => {
+                            return subject.title
+                                .toUpperCase()
+                                .includes(this.searchValue.toUpperCase()) ||
+                                subject.location
+                                    .toUpperCase()
+                                    .includes(this.searchValue.toUpperCase()) ||
+                                subject.price.toString()
+                                    .toLowerCase()
+                                    .includes(this.searchValue.toLowerCase()) ||
+                                subject.availableSpace.toString()
+                                    .toLowerCase()
+                                    .includes(this.searchValue.toLowerCase())
+                        })
+                    }
+                    // sort by subjects
+                    subjectsArray = subjectsArray.sort((a, b) => {
+                        if (this.sortBy == 'subject') {
+                            let fa = a.title.toLowerCase(), fb = b.title.toLowerCase()
+                            if (fa < fb) {
+                                return -1
+                            }
+                            if (fa > fb) {
+                                return 1
+                            }
+                            return 0
+                        } //sort by location
+                        else if (this.sortBy == 'location') {
+                            let fa = a.location.toLowerCase(), fb = b.location.toLowerCase()
+                            if (fa < fb) {
+                                return -1
+                            }
+                            if (fa > fb) {
+                                return 1
+                            }
+                            return 0
+                        } // sort by price
+                        else if (this.sortBy == 'price') {
+                            if (a.price > b.price)
+                                return 1;
+                            if (a.price < b.price)
+                                return -1;
+                            return 0;
+                        }// sort by availability
+                        else if (this.sortBy == 'availability') {
+                            if (a.availableSpace > b.availableSpace)
+                                return 1;
+                            if (a.availableSpace < b.availableSpace)
+                                return -1;
+                            return 0;
+                        }
+                    }) //sort to asc/desc
+                    if (!this.ascending) {
+                        subjectsArray.reverse()
+                    }
+                    return subjectsArray
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

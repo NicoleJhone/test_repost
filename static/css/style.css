@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+#app {
+    font-family: 'Poppins', sans-serif; /* Using Poppins font family */
+    text-rendering: optimizeLegibility !important; /* Optimizing text rendering */
+    background: #f3f3f5; /* Setting background color */
+}
+/* Preventing horizontal overflow */
+body, html {
+    overflow-x: hidden;
+}
+
+/* Setting maximum width for images */
+img {
+    max-width: 100%; 
+}
+
+/* Styling for input placeholders */
+.form-input::placeholder {
+    color: rgba(70 69 71 / 0.7); /* Setting placeholder text color */
+}
+
+/* Styling for form inputs */
+.form-input {
+    width: 100%; /* Setting width */
+    height: 50px; /* Setting height */
+    outline: none !important; /* Removing outline on focus */
+    padding: 10px 15px; /* Setting padding */
+    color: #0d0d25; /* Setting text color */
+    -webkit-appearance: none; /* Removing default appearance */
+    border-radius: 10px; /* Setting border radius */
+    border: none; /* Removing border */
+    background: #f8f8f8; /* Setting background color */
+    /* Adding box shadow for depth */
+    box-shadow: inset 6px 6px 8px #dadada, inset -6px -6px 8px #ffffff; 
+}
+
+/* Disabling tap highlighting */
+* {
+    -webkit-tap-highlight-color: transparent; 
+}
+
+/* Media query for screens larger than 992px */
+@media screen and (min-width: 992px) {
+    /* Styling for viewport */
+    #viewport {
+        overflow: hidden; 
+        position: fixed;
+        height: 100%; 
+        width: 100%;
+        top: 0; 
+        left: 0; 
+        bottom: 0; 
+        right: 0; 
+    }
+}
+
+
+
+/* Styling for headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #0d0d25; /* Setting text color */
+    font-weight: 900; /* Setting font weight */
+}
+
+/* Styling for paragraphs */
+p {
+    font-size: 16px; /* Setting font size */
+    line-height: 30px; /* Setting line height */
+}
+
+
+
+.rating {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    top: 1rem;
+}
+/* Styling for card text */
+.card-text {
+    text-decoration: none; /* Removing text decoration */
+}
+
+/* Styling for card body */
+.card-body {
+    padding: 15px; /* Adding padding */
+}
+
+/* Styling for add to cart button */
+.add-to-cart-btn {
+    width: 100%; /* Setting button width to 100% */
+}
+.btn-primary {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    border-radius: 3px;
+    background: red;
+    color: #fff;
+}
+
+/* Styling for card image top */
+.card-img {
+    max-width: 600px; /* Setting maximum width */
+    max-height: 200px; /* Setting maximum height */
+    width: auto; /* Setting width to auto */
+    height: auto; /* Setting height to auto */
+    object-fit: contain; /* Setting object fit for image */
+    object-position: center; /* Setting object position for image */
+    padding: 5px;
+}
+
+/* Styling for cart image */
+.cart img {
+    border-radius: 0; /* Removing border radius */
+    max-width: 150px; /* Setting maximum width */
+    max-height: 150px; /* Setting maximum height */
+    height: auto; /* Setting height to auto */
+    width: auto; /* Setting width to auto */
+    object-fit: cover; /* Setting object fit for image */
+    object-position: center; /* Setting object position for image */
+}
+
+/* Styling for rounded corners card */
+.card.rounded-20 {
+    border-radius: 20px; /* Adding border radius */
+}
+
+/* Styling for custom navbar */
+.navbar-custom {
+    background-color: white; /* Setting background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adding box shadow */
+    padding: 20px; /* Adding padding */
+}
+
+/* Styling for navbar links */
+.navbar-custom .navbar-nav .nav-link {
+    color: black; /* Setting link color */
+}
+
+/* Styling for hovered navbar links */
+.navbar-custom .navbar-nav .nav-link:hover {
+    color: #333; /* Changing link color on hover */
+}
+
+/* Styling for navbar brand */
+.navbar-custom .navbar-brand {
+    color: #740000; /* Setting brand color */
+    font-weight: 900; /* Setting font weight */
+}
+
+/* Styling for hovered navbar brand */
+.navbar-custom .navbar-brand:hover {
+    color: #333; /* Changing brand color on hover */
+}
